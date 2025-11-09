@@ -1,0 +1,63 @@
+{
+  "name": "data_aggregation_service",
+  "version": "1.0.0",
+  "description": "Real-time data aggregation service for meme coins (DexScreener, Jupiter, GeckoTerminal).",
+  "main": "dist/server.js",
+  "type": "commonjs",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anurag-in05/Data_Aggregation_Service.git"
+  },
+  "keywords": [
+    "fastify",
+    "socket.io",
+    "redis",
+    "typescript",
+    "data-aggregation",
+    "dexscreener",
+    "jupiter",
+    "geckoterminal"
+  ],
+  "author": "Anurag",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/anurag-in05/Data_Aggregation_Service/issues"
+  },
+  "homepage": "https://github.com/anurag-in05/Data_Aggregation_Service#readme",
+  "dependencies": {
+    "axios": "^1.6.8",
+    "axios-retry": "^4.5.0",
+    "bullmq": "^5.63.0",
+    "dotenv": "^16.3.1",
+    "express": "^5.1.0",
+    "fastify": "^5.6.1",
+    "ioredis": "^5.8.2",
+    "pino": "^10.1.0",
+    "redis": "^5.9.0",
+    "socket.io": "^4.8.1",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/express": "^5.0.5",
+    "@types/ioredis": "^4.28.10",
+    "@types/node": "^20.19.24",
+    "@types/socket.io": "^3.0.1",
+    "@types/socket.io-client": "^1.4.36",
+    "@types/supertest": "^6.0.3",
+    "ioredis-mock": "^8.13.1",
+    "socket.io-client": "^4.8.1",
+    "supertest": "^7.1.4",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.4.2",
+    "vitest": "^1.6.1"
+  }
+}
