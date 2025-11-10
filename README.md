@@ -21,15 +21,3 @@ It exposes both **REST APIs** and **WebSocket streams** for clients to receive c
 - Tested, modular, and production-ready — ideal for scaling analytics dashboards or bots.
 
 ---
-
-## 🧠 Architecture
-
-```mermaid
-graph TD
-    A[DexScreener API] --> D[Aggregator Worker]
-    B[GeckoTerminal API] --> D
-    D -->|mergeTokens()| C[Redis Cache]
-    C --> E[Fastify REST API]
-    C --> F[Socket.IO WebSocket Server]
-    E --> G[Client Fetch /tokens]
-    F --> H[Client Live Updates]
