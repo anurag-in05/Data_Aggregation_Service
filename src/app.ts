@@ -5,19 +5,12 @@ import { startFetchAndCacheJob } from "./jobs/fetchAndCacheJob";
 import { tokenRoutes } from "./routes/tokens";
 import { metricsRoutes } from "./routes/metrics";
 import { listTokens } from "./cache/repo";
+import { fastifyLogger } from "./libs/logger";
 
 export async function buildApp() {
-  const fastify = Fastify({
-    logger:
-      process.env.NODE_ENV === "development"
-        ? {
-            transport: {
-              target: "pino-pretty",
-              options: { colorize: true },
-            },
-          }
-        : true,
-  });
+  // Use the centralized Fastify logger configuration. In dev this uses pino-pretty;
+  // in production it falls back to a simple info-level logger that doesn't require pino-pretty.
+  const fastify = Fastify({ logger: fastifyLogger });
 
   // ✅ Root welcome route (fix for 404 at /)
   fastify.get("/", async () => ({
