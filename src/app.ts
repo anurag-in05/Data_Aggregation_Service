@@ -1,12 +1,10 @@
 import Fastify from "fastify";
 import { Server as SocketIOServer } from "socket.io";
-import { startFetchAndCacheJob } from "./jobs/fetchAndCacheJob";
 import { createServer, IncomingMessage, ServerResponse } from "http";
-import { ENV } from "./config/env";
+import { startFetchAndCacheJob } from "./jobs/fetchAndCacheJob";
 import { tokenRoutes } from "./routes/tokens";
-import { listTokens } from "./cache/repo";
 import { metricsRoutes } from "./routes/metrics";
-
+import { listTokens } from "./cache/repo";
 
 export async function buildApp() {
   const fastify = Fastify({
@@ -21,14 +19,20 @@ export async function buildApp() {
         : true,
   });
 
-  fastify.get("/health", async (_, reply) => {
-    reply.code(200).send({ status: "ok" });
-  });
+  // ✅ Root welcome route (fix for 404 at /)
+  fastify.get("/", async () => ({
+    message: "Welcome to Meme Token Aggregation Service 🚀",
+    routes: ["/health", "/tokens", "/metrics"],
+  }));
 
+  // ✅ Health check
+  fastify.get("/health", async () => ({ status: "ok" }));
+
+  // ✅ Register routes
   fastify.register(tokenRoutes);
   fastify.register(metricsRoutes);
 
-
+  // ✅ Attach HTTP + WebSocket server
   const httpServer = createServer(
     (req: IncomingMessage, res: ServerResponse) => {
       fastify.server.emit("request", req, res);
@@ -40,10 +44,11 @@ export async function buildApp() {
   });
 
   io.on("connection", (socket) => {
-    fastify.log.info(` socket connected: ${socket.id}`);
+    fastify.log.info(`📡 socket connected: ${socket.id}`);
     socket.emit("welcome", { msg: "connected to real-time-agg-service" });
   });
 
+  // ✅ Periodic broadcast
   setInterval(async () => {
     try {
       const { data } = await listTokens("24h", "volume", 0, 10);
@@ -54,6 +59,9 @@ export async function buildApp() {
   }, 15000);
 
   await fastify.ready();
+
+  // ✅ Start fetch job (mock-safe)
   startFetchAndCacheJob(io);
+
   return { fastify, httpServer, io };
 }
